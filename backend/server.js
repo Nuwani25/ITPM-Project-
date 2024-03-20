@@ -1,11 +1,28 @@
-const express = require('express');
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const dotenv = require("dotenv");
 const app = express();
-const port = 3000;
+require("dotenv").config();
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+const PORT = process.env.PORT || 3000;
+
+app.use(cors());
+app.use(bodyParser.json());
+
+const URL = process.env.MONGODB_URL;
+
+mongoose.connect(URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
-app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`);
+const connection = mongoose.connection;
+connection.once("open", () => {
+  console.log("Mongodb connection succesful!");
+});
+
+app.listen(PORT, () => {
+  console.log(`Server listening at http://localhost:${PORT}`);
 });
